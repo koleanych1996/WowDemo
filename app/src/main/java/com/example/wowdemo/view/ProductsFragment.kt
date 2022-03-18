@@ -1,13 +1,17 @@
 package com.example.wowdemo.view
 
+import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
@@ -47,6 +51,19 @@ class ProductsFragment : Fragment() {
         setupProductsRecyclerView()
 
         viewModel.setStateEvent(ProductsStateEvent.PingProductsStateEvent)
+
+        binding.listFormatRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
+
+            if (binding.listFormatRadioBtn.isChecked) {
+                val layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                binding.productsRecycler.layoutManager = layoutManager
+            } else {
+                val layoutManager =
+                    GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+                binding.productsRecycler.layoutManager = layoutManager
+            }
+        }
     }
 
     private fun setupProductsRecyclerView() {
