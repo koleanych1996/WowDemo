@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
@@ -15,6 +15,7 @@ import com.example.wowdemo.viewModel.ProductsStateEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -52,6 +53,12 @@ class ProductsFragment : Fragment() {
         binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = ProductsRecyclerViewAdapter(requireContext(), productsList)
         binding.productsRecycler.adapter = adapter
+
+        val dividerItemDecoration = DividerItemDecoration(
+            binding.productsRecycler.context,
+            (binding.productsRecycler.layoutManager as LinearLayoutManager).orientation
+        )
+        binding.productsRecycler.addItemDecoration(dividerItemDecoration)
     }
 
     private fun subscribeObservers() {
