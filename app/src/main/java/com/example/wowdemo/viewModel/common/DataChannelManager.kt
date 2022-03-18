@@ -2,11 +2,8 @@ package com.example.wowdemo.viewModel.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.wowdemo.viewModel.StateMessage
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -16,8 +13,6 @@ abstract class DataChannelManager<ViewState> {
 
     private val _activeStateEvents: HashSet<String> = HashSet()
     private val _numActiveJobs: MutableLiveData<Int> = MutableLiveData()
-    private val dataChannel: ConflatedBroadcastChannel<DataState<ViewState>> =
-        ConflatedBroadcastChannel()
     private var channelScope: CoroutineScope? = null
 
     val messageStack = MessageStack()
@@ -25,49 +20,57 @@ abstract class DataChannelManager<ViewState> {
     val numActiveJobs: LiveData<Int>
         get() = _numActiveJobs
 
-    init {
-        dataChannel
-            .asFlow()
-            .onEach { dataState ->
-                dataState.data?.let { data ->
-                    handleNewData(data)
-                    removeStateEvent(dataState.stateEvent)
-                }
-                dataState.stateMessage?.let { stateMessage ->
-                    handleNewStateMessage(stateMessage)
-                    removeStateEvent(dataState.stateEvent)
-                }
-            }
-            .launchIn(CoroutineScope(Dispatchers.Main))
-    }
+    abstract fun handleNewData(data: ViewState)
 
     fun setupChannel() {
         cancelJobs()
         setupNewChannelScope(CoroutineScope(Dispatchers.IO))
     }
 
-    abstract fun handleNewData(data: ViewState)
-
-    private fun offerToDataChannel(dataState: DataState<ViewState>) {
-        dataChannel.let {
-            if (!it.isClosedForSend) {
-                it.offer(dataState)
-            }
-        }
-    }
-
     fun launchJob(
         stateEvent: StateEvent,
-        jobFunction: Flow<DataState<ViewState>>
+        jobFunction: Flow<DataState<ViewState>?>
     ) {
         if (!isStateEventActive(stateEvent) && messageStack.size == 0) {
             addStateEvent(stateEvent)
             jobFunction
                 .onEach { dataState ->
-                    offerToDataChannel(dataState)
+                    withContext(Dispatchers.Main) {
+                        dataState?.data?.let { data ->
+                            handleNewData(data)
+                        }
+                        dataState?.stateMessage?.let { stateMessage ->
+                            handleNewStateMessage(stateMessage)
+                        }
+                        dataState?.stateEvent?.let { stateEvent ->
+                            removeStateEvent(stateEvent)
+                        }
+                    }
                 }
                 .launchIn(getChannelScope())
         }
+    }
+
+    fun isJobAlreadyActive(stateEvent: StateEvent): Boolean {
+        return isStateEventActive(stateEvent)
+    }
+
+    fun isJobAlreadyActive(stateEvent: String): Boolean {
+        return isStateEventActive(stateEvent)
+    }
+
+    fun cancelJobs() {
+        if (channelScope != null) {
+            if (channelScope?.isActive == true) {
+                channelScope?.cancel()
+            }
+            channelScope = null
+        }
+        clearActiveStateEventCounter()
+    }
+
+    fun clearStateMessage(index: Int = 0) {
+        messageStack.removeAt(index)
     }
 
     private fun handleNewStateMessage(stateMessage: StateMessage) {
@@ -76,10 +79,6 @@ abstract class DataChannelManager<ViewState> {
 
     private fun appendStateMessage(stateMessage: StateMessage) {
         messageStack.add(stateMessage)
-    }
-
-    fun clearStateMessage(index: Int = 0) {
-        messageStack.removeAt(index)
     }
 
     private fun clearActiveStateEventCounter() {
@@ -97,31 +96,21 @@ abstract class DataChannelManager<ViewState> {
         syncNumActiveStateEvents()
     }
 
-    fun isJobAlreadyActive(stateEvent: StateEvent): Boolean {
-        return isStateEventActive(stateEvent)
-    }
-
     private fun isStateEventActive(stateEvent: StateEvent): Boolean {
         return _activeStateEvents.contains(stateEvent.toString())
     }
 
-    fun getChannelScope(): CoroutineScope {
+    private fun isStateEventActive(stateEvent: String): Boolean {
+        return _activeStateEvents.contains(stateEvent)
+    }
+
+    private fun getChannelScope(): CoroutineScope {
         return channelScope ?: setupNewChannelScope(CoroutineScope(Dispatchers.IO))
     }
 
     private fun setupNewChannelScope(coroutineScope: CoroutineScope): CoroutineScope {
         channelScope = coroutineScope
         return channelScope as CoroutineScope
-    }
-
-    fun cancelJobs() {
-        if (channelScope != null) {
-            if (channelScope?.isActive == true) {
-                channelScope?.cancel()
-            }
-            channelScope = null
-        }
-        clearActiveStateEventCounter()
     }
 
     private fun syncNumActiveStateEvents() {

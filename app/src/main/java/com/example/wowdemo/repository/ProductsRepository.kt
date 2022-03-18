@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
 
-    fun pingProducts(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>>
+    fun getProductsList(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>>
 
 }

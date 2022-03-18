@@ -2,9 +2,6 @@ package com.example.wowdemo.viewModel.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.wowdemo.viewModel.MessageType
-import com.example.wowdemo.viewModel.Response
-import com.example.wowdemo.viewModel.StateMessage
 
 class MessageStack : ArrayList<StateMessage>() {
 
@@ -46,7 +43,7 @@ class MessageStack : ArrayList<StateMessage>() {
         return StateMessage(
             Response(
                 message = "does nothing",
-                messageType = MessageType.None("")
+                messageType = MessageType.None
             )
         ) // this does nothing
     }

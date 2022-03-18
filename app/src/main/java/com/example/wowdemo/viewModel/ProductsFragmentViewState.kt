@@ -1,5 +1,7 @@
 package com.example.wowdemo.viewModel
 
+import com.example.wowdemo.model.Product
+
 data class ProductsFragmentViewState(
-    var ping: Boolean? = null
+    var productsList: List<Product>? = null
 )

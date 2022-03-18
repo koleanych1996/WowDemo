@@ -1,8 +1,5 @@
 package com.example.wowdemo.viewModel.common
 
-import com.example.wowdemo.viewModel.Response
-import com.example.wowdemo.viewModel.StateMessage
-
 data class DataState<T>(
     var data: T? = null,
     var stateMessage: StateMessage? = null,

@@ -1,10 +1,9 @@
 package com.example.wowdemo.viewModel
 
 import com.example.wowdemo.Constants
+import com.example.wowdemo.model.Product
 import com.example.wowdemo.repository.ProductsRepository
-import com.example.wowdemo.viewModel.common.BaseViewModel
-import com.example.wowdemo.viewModel.common.DataState
-import com.example.wowdemo.viewModel.common.StateEvent
+import com.example.wowdemo.viewModel.common.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -21,8 +20,8 @@ class ProductsFragmentViewModel
 ) : BaseViewModel<ProductsFragmentViewState>() {
 
     override fun handleNewData(data: ProductsFragmentViewState) {
-        data.ping?.let {
-            setPing(it)
+        data.productsList?.let {
+            setProductsList(it)
         }
     }
 
@@ -30,7 +29,7 @@ class ProductsFragmentViewModel
         val job: Flow<DataState<ProductsFragmentViewState>> =
             when (stateEvent) {
                 is ProductsStateEvent.PingProductsStateEvent -> {
-                    productsRepository.pingProducts(
+                    productsRepository.getProductsList(
                         stateEvent = stateEvent
                     )
                 }
@@ -55,9 +54,9 @@ class ProductsFragmentViewModel
         return ProductsFragmentViewState()
     }
 
-    private fun setPing(ping: Boolean) {
+    private fun setProductsList(productsList: List<Product>) {
         val update = getCurrentViewStateOrNew()
-        update.ping = ping
+        update.productsList = productsList
         setViewState(update)
     }
 }

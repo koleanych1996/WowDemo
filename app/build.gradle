@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.wowdemo"
-        minSdk 21
+        minSdk 23
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -60,5 +60,13 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
     implementation "androidx.navigation:navigation-testing:$navigation_version"
 
+    //network
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    //okhttp logging interceptor
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
 }

@@ -44,8 +44,8 @@ class ProductsFragment : Fragment() {
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
-            viewState.ping?.let {
-                Toast.makeText(requireContext(), "PING = $it", Toast.LENGTH_LONG).show()
+            viewState.productsList?.let {
+                Toast.makeText(requireContext(), "PRODUCTS = $it", Toast.LENGTH_LONG).show()
             }
 
         }
