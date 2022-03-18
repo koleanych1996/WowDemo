@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wowdemo.databinding.FragmentProductsBinding
+import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
 import com.example.wowdemo.viewModel.ProductsStateEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +26,9 @@ class ProductsFragment : Fragment() {
 
     private val viewModel: ProductsFragmentViewModel by viewModels()
 
+    private var productsList: MutableList<Product> = mutableListOf()
+    private lateinit var adapter: ProductsRecyclerViewAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,14 +43,24 @@ class ProductsFragment : Fragment() {
 
         subscribeObservers()
 
+        setupProductsRecyclerView()
+
         viewModel.setStateEvent(ProductsStateEvent.PingProductsStateEvent)
+    }
+
+    private fun setupProductsRecyclerView() {
+        binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
+        adapter = ProductsRecyclerViewAdapter(requireContext(), productsList)
+        binding.productsRecycler.adapter = adapter
     }
 
     private fun subscribeObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
             viewState.productsList?.let {
-                Toast.makeText(requireContext(), "PRODUCTS = $it", Toast.LENGTH_LONG).show()
+                productsList.clear()
+                productsList.addAll(it)
+                adapter.notifyDataSetChanged()
             }
 
         }
