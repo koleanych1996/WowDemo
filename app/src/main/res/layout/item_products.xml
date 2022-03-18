@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:padding="20dp"
-    android:layout_height="wrap_content">
+    android:clipToPadding="false"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
 
     <ImageView
         android:id="@+id/product_iv"
@@ -67,43 +68,49 @@
         app:layout_constraintStart_toEndOf="@+id/product_price"
         app:layout_constraintTop_toTopOf="@+id/product_price" />
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/product_favourite_btn"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_circle"
+        android:elevation="4dp"
         android:insetLeft="0dp"
         android:insetTop="0dp"
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:padding="0dp"
-        android:layout_marginTop="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_heart"
+        app:backgroundTint="@color/white"
         app:cornerRadius="30dp"
-        app:elevation="8dp"
-        app:icon="@drawable/ic_logo"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="24dp"
         app:layout_constraintStart_toEndOf="@+id/product_iv"
-        app:layout_constraintTop_toBottomOf="@+id/product_price" />
+        app:layout_constraintTop_toBottomOf="@+id/product_price"
+        app:tint="#E3453A" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+    <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginStart="21dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_circle"
+        android:elevation="4dp"
         android:insetLeft="0dp"
         android:insetTop="0dp"
+        android:layout_marginStart="15dp"
         android:insetRight="0dp"
-        android:layout_marginTop="8dp"
         android:insetBottom="0dp"
         android:padding="0dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cart_empty"
+        app:backgroundTint="@color/white"
         app:cornerRadius="30dp"
-        app:elevation="8dp"
-        app:icon="@drawable/ic_logo"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="24dp"
+        app:tint="#182867"
         app:layout_constraintStart_toEndOf="@+id/product_favourite_btn"
         app:layout_constraintTop_toBottomOf="@+id/product_price" />
 
