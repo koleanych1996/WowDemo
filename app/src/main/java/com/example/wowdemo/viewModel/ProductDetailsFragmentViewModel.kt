@@ -2,6 +2,7 @@ package com.example.wowdemo.viewModel
 
 import com.example.wowdemo.Constants
 import com.example.wowdemo.model.Product
+import com.example.wowdemo.repository.ProductDetailsRepository
 import com.example.wowdemo.repository.ProductsRepository
 import com.example.wowdemo.viewModel.common.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,29 +15,30 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 @HiltViewModel
-class ProductsFragmentViewModel
+class ProductDetailsFragmentViewModel
 @Inject constructor(
-    private val productsRepository: ProductsRepository
-) : BaseViewModel<ProductsFragmentViewState>() {
+    private val productDetailsRepository: ProductDetailsRepository
+) : BaseViewModel<ProductDetailsFragmentViewState>() {
 
-    override fun handleNewData(data: ProductsFragmentViewState) {
-        data.productsList?.let {
-            setProductsList(it)
+    override fun handleNewData(data: ProductDetailsFragmentViewState) {
+        data.product?.let {
+            setProduct(it)
         }
     }
 
     override fun setStateEvent(stateEvent: StateEvent) {
-        val job: Flow<DataState<ProductsFragmentViewState>> =
+        val job: Flow<DataState<ProductDetailsFragmentViewState>> =
             when (stateEvent) {
-                is ProductsStateEvent.GetProductsStateEvent -> {
-                    productsRepository.getProductsList(
-                        stateEvent = stateEvent
+                is ProductDetailsStateEvent.GetProductStateEvent -> {
+                    productDetailsRepository.getProduct(
+                        stateEvent = stateEvent,
+                        productId = stateEvent.productId
                     )
                 }
                 else -> {
                     flow {
                         emit(
-                            DataState.error<ProductsFragmentViewState>(
+                            DataState.error<ProductDetailsFragmentViewState>(
                                 response = Response(
                                     message = Constants.INVALID_STATE_EVENT,
                                     messageType = MessageType.Error
@@ -50,13 +52,13 @@ class ProductsFragmentViewModel
         launchJob(stateEvent = stateEvent, jobFunction = job)
     }
 
-    override fun initNewViewState(): ProductsFragmentViewState {
-        return ProductsFragmentViewState()
+    override fun initNewViewState(): ProductDetailsFragmentViewState {
+        return ProductDetailsFragmentViewState()
     }
 
-    private fun setProductsList(productsList: List<Product>) {
+    private fun setProduct(product: Product) {
         val update = getCurrentViewStateOrNew()
-        update.productsList = productsList
+        update.product = product
         setViewState(update)
     }
 }
