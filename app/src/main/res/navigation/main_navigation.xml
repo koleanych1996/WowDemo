@@ -33,6 +33,11 @@
         android:label="fragment_product_details"
         tools:layout="@layout/fragment_product_details">
 
+        <argument
+            android:name="product_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+
     </fragment>
 
     <fragment

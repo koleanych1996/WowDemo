@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
@@ -83,6 +85,16 @@ class ProductsFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         }*/
+
+        adapter.setClickListener(
+            object : ProductsRecyclerViewAdapter.ItemClickListener {
+                override fun onItemClick(view: View?, position: Int) {
+                    val action = ProductsFragmentDirections
+                        .actionProductsFragmentToProductDetailsFragment(productId = allProductsData[position].id)
+                    findNavController().navigate(action)
+                }
+            }
+        )
     }
 
     private fun setupProductsRecyclerView() {
