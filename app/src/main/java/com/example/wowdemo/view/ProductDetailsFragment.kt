@@ -73,6 +73,7 @@ class ProductDetailsFragment : Fragment() {
             binding.productDetails.text = it.details
             binding.productPrice.text = priceStr
             binding.productPrice2.text = priceStr
+            binding.informationTextTv.text = it.details
 
             Glide.with(requireContext())
                 .load(it.category.icon)
