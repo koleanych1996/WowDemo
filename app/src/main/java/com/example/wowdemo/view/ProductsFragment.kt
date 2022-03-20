@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
@@ -52,7 +51,7 @@ class ProductsFragment : Fragment() {
 
         setupProductsRecyclerView()
 
-        viewModel.setStateEvent(ProductsStateEvent.PingProductsStateEvent)
+        viewModel.setStateEvent(ProductsStateEvent.GetProductsStateEvent)
 
         binding.listFormatRadioGroup.setOnCheckedChangeListener { _, _ ->
 
