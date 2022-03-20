@@ -28,5 +28,7 @@ data class Product(
     val size: String,
     @SerializedName("sold_count")
     @Expose
-    val soldCount: Int
+    val soldCount: Int,
+
+    var isFavourite: Boolean = false
 )

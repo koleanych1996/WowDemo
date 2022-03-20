@@ -35,6 +35,18 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
         holder.productPrice.text = priceStr
         holder.productPrice2.text = priceStr
 
+        holder.productFavouriteBtn.setOnClickListener {
+            if (!product.isFavourite) {
+                product.isFavourite = true
+                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_filled)
+                holder.productFavouriteBtn.setBackgroundResource(R.drawable.orange_circle)
+            } else {
+                product.isFavourite = false
+                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_unfilled)
+                holder.productFavouriteBtn.setBackgroundResource(R.drawable.white_circle)
+            }
+        }
+
         Glide.with(mContext)
             .load(product.category.icon)
             .placeholder(R.drawable.ic_logo)
@@ -55,6 +67,7 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
         var productPrice: TextView = itemView.findViewById(R.id.product_price)
         var productPrice2: TextView = itemView.findViewById(R.id.product_price_2)
         var productIV: ImageView = itemView.findViewById(R.id.product_iv)
+        var productFavouriteBtn: ImageView = itemView.findViewById(R.id.product_favourite_btn)
         override fun onClick(view: View?) {
             if (mClickListener != null) mClickListener!!.onItemClick(view, adapterPosition)
         }
