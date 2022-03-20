@@ -54,7 +54,7 @@ class ProductsFragment : Fragment() {
 
         viewModel.setStateEvent(ProductsStateEvent.PingProductsStateEvent)
 
-        binding.listFormatRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
+        binding.listFormatRadioGroup.setOnCheckedChangeListener { _, _ ->
 
             if (binding.listFormatRadioBtn.isChecked) {
                 val layoutManager =
@@ -73,17 +73,17 @@ class ProductsFragment : Fragment() {
 
         // TODO: Apply it when database is implemented
         /**binding.goToFavouritesBtn.setOnClickListener {
-            if (onlyFavourites) {
-                onlyFavourites = false
-                productsList.clear()
-                productsList.addAll(allProductsData)
-                adapter.notifyDataSetChanged()
-            } else {
-                onlyFavourites = true
-                productsList.clear()
-                productsList.addAll(productsList.filter { it.isFavourite })
-                adapter.notifyDataSetChanged()
-            }
+        if (onlyFavourites) {
+        onlyFavourites = false
+        productsList.clear()
+        productsList.addAll(allProductsData)
+        adapter.notifyDataSetChanged()
+        } else {
+        onlyFavourites = true
+        productsList.clear()
+        productsList.addAll(productsList.filter { it.isFavourite })
+        adapter.notifyDataSetChanged()
+        }
         }*/
 
         adapter.setClickListener(
