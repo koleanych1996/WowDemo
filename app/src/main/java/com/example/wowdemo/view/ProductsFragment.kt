@@ -1,18 +1,14 @@
 package com.example.wowdemo.view
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
@@ -32,6 +28,9 @@ class ProductsFragment : Fragment() {
 
     private val viewModel: ProductsFragmentViewModel by viewModels()
 
+    //private var onlyFavourites: Boolean = false
+
+    private var allProductsData: MutableList<Product> = mutableListOf()
     private var productsList: MutableList<Product> = mutableListOf()
     private lateinit var adapter: ProductsRecyclerViewAdapter
 
@@ -64,11 +63,26 @@ class ProductsFragment : Fragment() {
                 Toast.makeText(requireContext(), "Coming soon", Toast.LENGTH_SHORT).show()
 
                 // TODO: uncomment whet grid design appears
-               /** val layoutManager =
-                    GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+                /** val layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
                 binding.productsRecycler.layoutManager = layoutManager*/
             }
         }
+
+        // TODO: Apply it when database is implemented
+        /**binding.goToFavouritesBtn.setOnClickListener {
+            if (onlyFavourites) {
+                onlyFavourites = false
+                productsList.clear()
+                productsList.addAll(allProductsData)
+                adapter.notifyDataSetChanged()
+            } else {
+                onlyFavourites = true
+                productsList.clear()
+                productsList.addAll(productsList.filter { it.isFavourite })
+                adapter.notifyDataSetChanged()
+            }
+        }*/
     }
 
     private fun setupProductsRecyclerView() {
@@ -87,6 +101,10 @@ class ProductsFragment : Fragment() {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
             viewState.productsList?.let {
+
+                allProductsData.clear()
+                allProductsData.addAll(it)
+
                 productsList.clear()
                 productsList.addAll(it)
                 adapter.notifyDataSetChanged()
