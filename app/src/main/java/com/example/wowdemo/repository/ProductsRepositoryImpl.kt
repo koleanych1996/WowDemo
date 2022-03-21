@@ -1,6 +1,7 @@
 package com.example.wowdemo.repository
 
 import android.content.Context
+import com.example.wowdemo.model.GetProductsResponse
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.network.WowDemoApiService
 import com.example.wowdemo.persistance.WowDemoDao
@@ -22,13 +23,16 @@ class ProductsRepositoryImpl
 ) : ProductsRepository {
 
 
-    override fun getProductsList(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>> {
+    override fun getProductsList(
+        stateEvent: StateEvent,
+        page: Int
+    ): Flow<DataState<ProductsFragmentViewState>> {
         return object :
-            NetworkBoundResource<List<Product>, List<Product>, ProductsFragmentViewState>(
+            NetworkBoundResource<GetProductsResponse, List<Product>, ProductsFragmentViewState>(
                 dispatcher = Dispatchers.IO,
                 stateEvent = stateEvent,
                 apiCall = {
-                    wowDemoApiService.getProducts().products
+                    wowDemoApiService.getProducts(page)
                 },
                 cacheCall = {
                     wowDemoDao.readAllProductsLocalStorage()
@@ -48,11 +52,15 @@ class ProductsRepositoryImpl
                 )
             }
 
-            override suspend fun updateCache(networkObject: List<Product>) {
-                networkObject.forEach {
-                    it.isFavourite = wowDemoDao.readProduct(it.id).isFavourite
+            override suspend fun updateCache(networkObject: GetProductsResponse) {
+
+                networkObject.products.forEach { product ->
+                    product.page = networkObject.currentPage
+                    wowDemoDao.readProduct(product.id)?.let {
+                        product.isFavourite = it.isFavourite
+                    }
                 }
-                wowDemoDao.insertOrUpdateProducts(products = networkObject)
+                wowDemoDao.insertOrUpdateProducts(products = networkObject.products)
             }
 
         }.result
@@ -65,8 +73,11 @@ class ProductsRepositoryImpl
     ): Flow<DataState<ProductsFragmentViewState>> = flow {
 
         val product = wowDemoDao.readProduct(productId)
-        product.isFavourite = !product.isFavourite
-        wowDemoDao.insertOrUpdateProducts(listOf(product))
+        product?.let {
+            product.isFavourite = !product.isFavourite
+            wowDemoDao.insertOrUpdateProducts(listOf(product))
+        }
+
 
         val cacheResult = safeCacheCall(Dispatchers.IO) {
             wowDemoDao.readAllProductsLocalStorage()

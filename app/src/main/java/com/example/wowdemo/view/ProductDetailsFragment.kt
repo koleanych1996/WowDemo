@@ -17,6 +17,7 @@ import com.example.wowdemo.databinding.FragmentProductDetailsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductDetailsFragmentViewModel
 import com.example.wowdemo.viewModel.ProductDetailsStateEvent
+import com.example.wowdemo.viewModel.common.MessageType
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -76,6 +77,7 @@ class ProductDetailsFragment : BaseFragment() {
                 )
                 val message = it.response.message
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                viewModel.clearStateMessage()
             }
         }
     }

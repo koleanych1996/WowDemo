@@ -53,5 +53,8 @@ data class Product(
     val soldCount: Int,
 
     @ColumnInfo(name = "is_favourite")
-    var isFavourite: Boolean = false
+    var isFavourite: Boolean = false,
+
+    @ColumnInfo(name = "page")
+    var page: Int? = null
 )

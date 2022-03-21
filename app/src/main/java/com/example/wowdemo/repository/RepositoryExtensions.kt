@@ -44,11 +44,6 @@ suspend fun <T> safeApiCall(
                     val code = throwable.code()
                     val errorResponse = convertErrorBody(throwable)
                     when (code) {
-                        401 -> {
-                            ApiResult.AuthError(
-                                errorResponse
-                            )
-                        }
                         403 -> {
                             val errorObject = getErrorObject(gson, errorResponse)
                             ApiResult.ForbiddenError(
