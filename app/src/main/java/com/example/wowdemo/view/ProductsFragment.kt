@@ -1,19 +1,21 @@
 package com.example.wowdemo.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wowdemo.Constants.TAG
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
 import com.example.wowdemo.viewModel.ProductsStateEvent
+import com.example.wowdemo.viewModel.common.StateMessageCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -22,7 +24,7 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ProductsFragment : Fragment() {
+class ProductsFragment : BaseFragment() {
 
     private var _binding: FragmentProductsBinding? = null
     private val binding get() = _binding!!
@@ -46,8 +48,6 @@ class ProductsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        subscribeObservers()
 
         setupProductsRecyclerView()
 
@@ -96,6 +96,38 @@ class ProductsFragment : Fragment() {
         )
     }
 
+    override fun setupChannel() {
+        viewModel.setupChannel()
+    }
+
+    override fun registerObservers() {
+            viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+
+                viewState.productsList?.let {
+
+                    allProductsData.clear()
+                    allProductsData.addAll(it)
+
+                    productsList.clear()
+                    productsList.addAll(it)
+                    adapter.notifyDataSetChanged()
+                }
+
+            }
+
+            viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
+                stateMessage?.let {
+                    Log.d(
+                        TAG,
+                        "StateMessage in ${ProductsFragment::class.java.simpleName} = $stateMessage"
+                    )
+                   val message = it.response.message
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+    }
+
     private fun setupProductsRecyclerView() {
         binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
         adapter = ProductsRecyclerViewAdapter(requireContext(), productsList)
@@ -108,20 +140,6 @@ class ProductsFragment : Fragment() {
         binding.productsRecycler.addItemDecoration(dividerItemDecoration)
     }
 
-    private fun subscribeObservers() {
-        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
-            viewState.productsList?.let {
-
-                allProductsData.clear()
-                allProductsData.addAll(it)
-
-                productsList.clear()
-                productsList.addAll(it)
-                adapter.notifyDataSetChanged()
-            }
-
-        }
-    }
 
 }

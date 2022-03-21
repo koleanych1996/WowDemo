@@ -31,17 +31,6 @@ data class ApiErrorException(
     }
 }
 
-data class AuthException(
-    @Expose
-    override val message: String
-) : RuntimeException(), ApiException {
-
-    override fun displayErrors(): String {
-        return message
-    }
-
-}
-
 data class ForbiddenException(
     @Expose
     override val message: String
