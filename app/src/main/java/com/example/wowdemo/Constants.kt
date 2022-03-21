@@ -4,6 +4,7 @@ object Constants {
     const val INVALID_STATE_EVENT = "Invalid state event"
     const val TAG: String = "WowDemoDebug"
     const val NETWORK_TIMEOUT = 60000L
+    const val CACHE_TIMEOUT = 60000L
 
     const val DATE_FORMAT_UTC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 

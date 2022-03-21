@@ -2,6 +2,8 @@ package com.example.wowdemo.repository
 
 import android.content.Context
 import android.util.Log
+import com.example.wowdemo.Constants.CACHE_ERROR_TIMEOUT
+import com.example.wowdemo.Constants.CACHE_TIMEOUT
 import com.example.wowdemo.Constants.NETWORK_ERROR_TIMEOUT
 import com.example.wowdemo.Constants.NETWORK_TIMEOUT
 import com.example.wowdemo.Constants.TAG
@@ -86,8 +88,7 @@ suspend fun <T> safeApiCall(
     }
 }
 
-// TODO: Remove or use
-/**suspend fun <T> safeCacheCall(
+suspend fun <T> safeCacheCall(
     dispatcher: CoroutineDispatcher,
     cacheCall: suspend () -> T?
 ): CacheResult<T?> {
@@ -109,7 +110,7 @@ suspend fun <T> safeApiCall(
             }
         }
     }
-}*/
+}
 
 
 fun <ViewState> buildError(
