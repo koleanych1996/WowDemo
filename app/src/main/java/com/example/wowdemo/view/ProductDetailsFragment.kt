@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.wowdemo.Constants
 import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductDetailsBinding
@@ -95,6 +95,7 @@ class ProductDetailsFragment : BaseFragment() {
                 .load(it.category.icon)
                 .placeholder(R.drawable.ic_logo)
                 .circleCrop()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(binding.productIv)
 
         }

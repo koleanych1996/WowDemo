@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.wowdemo.R
 import com.example.wowdemo.model.Product
 
@@ -51,6 +52,7 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
             .load(product.category.icon)
             .placeholder(R.drawable.ic_logo)
             .circleCrop()
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(holder.productIV)
     }
 
