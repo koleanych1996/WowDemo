@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:clipToPadding="false"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/product_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/product_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:maxLines="2"
+        android:fontFamily="@font/open_sans_extrabold"
+        android:padding="8dp"
+        android:textColor="#07195C"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/product_iv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/product_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_regular"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:maxLines="2"
+        android:padding="8dp"
+        android:textColor="#424A56"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/product_iv"
+        app:layout_constraintTop_toBottomOf="@+id/product_title" />
+
+    <TextView
+        android:id="@+id/product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:fontFamily="@font/open_sans_semibold"
+        android:padding="6dp"
+        android:textColor="#035A97"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/product_iv"
+        app:layout_constraintTop_toBottomOf="@+id/product_details" />
+
+    <TextView
+        android:id="@+id/product_price_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:fontFamily="@font/open_sans_semibold"
+        android:padding="6dp"
+        android:textColor="#9CB1BC"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/product_price"
+        app:layout_constraintStart_toEndOf="@+id/product_price"
+        app:layout_constraintTop_toTopOf="@+id/product_price" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/product_favourite_btn"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_circle"
+        android:elevation="4dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_heart_unfilled"
+        app:cornerRadius="30dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:layout_constraintStart_toEndOf="@+id/product_iv"
+        app:layout_constraintTop_toBottomOf="@+id/product_price"
+        app:tint="#E3453A" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/white_circle"
+        android:elevation="4dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:layout_marginStart="15dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_cart_empty"
+        app:cornerRadius="30dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="24dp"
+        app:tint="#182867"
+        app:layout_constraintStart_toEndOf="@+id/product_favourite_btn"
+        app:layout_constraintTop_toBottomOf="@+id/product_price" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
