@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
 
-    fun getProductsList(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>>
+    fun getProductsList(stateEvent: StateEvent, page: Int): Flow<DataState<ProductsFragmentViewState>>
 
     fun setProductFavourite(stateEvent: StateEvent, productId: Int): Flow<DataState<ProductsFragmentViewState>>
 

@@ -14,10 +14,6 @@ sealed class ApiResult<out T> {
         val errorObject: Any? = null
     ) : ApiResult<Nothing>()
 
-    data class AuthError(
-        val errorMessage: String? = null,
-    ) : ApiResult<Nothing>()
-
     data class NotFoundError(
         val errorMessage: String? = null,
     ) : ApiResult<Nothing>()
