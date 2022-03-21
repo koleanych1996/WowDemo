@@ -18,6 +18,7 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
     private val mData: List<Product> = data
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
     private var mClickListener: ItemClickListener? = null
+    private var mFavouriteClickListener: FavouriteClickListener? = null
 
     // inflates the row layout from xml when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,15 +37,26 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
         holder.productPrice.text = priceStr
         holder.productPrice2.text = priceStr
 
+        if (product.isFavourite) {
+            holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_filled)
+            holder.productFavouriteBtn.setBackgroundResource(R.drawable.orange_circle)
+        } else {
+            holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_unfilled)
+            holder.productFavouriteBtn.setBackgroundResource(R.drawable.white_circle)
+        }
+
         holder.productFavouriteBtn.setOnClickListener {
+
+            mFavouriteClickListener?.onFavouriteClick(it, position)
+
             if (!product.isFavourite) {
                 product.isFavourite = true
-                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_filled)
-                holder.productFavouriteBtn.setBackgroundResource(R.drawable.orange_circle)
+//                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_filled)
+//                holder.productFavouriteBtn.setBackgroundResource(R.drawable.orange_circle)
             } else {
                 product.isFavourite = false
-                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_unfilled)
-                holder.productFavouriteBtn.setBackgroundResource(R.drawable.white_circle)
+//                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_unfilled)
+//                holder.productFavouriteBtn.setBackgroundResource(R.drawable.white_circle)
             }
         }
 
@@ -89,9 +101,18 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
         mClickListener = itemClickListener
     }
 
+    // allows clicks events to be caught
+    fun setFavouriteClickListener(favouriteClickListener: FavouriteClickListener?) {
+        mFavouriteClickListener = favouriteClickListener
+    }
+
     // parent activity will implement this method to respond to click events
     interface ItemClickListener {
         fun onItemClick(view: View?, position: Int)
+    }
+
+    interface FavouriteClickListener {
+        fun onFavouriteClick(view: View?, position: Int)
     }
 
 }

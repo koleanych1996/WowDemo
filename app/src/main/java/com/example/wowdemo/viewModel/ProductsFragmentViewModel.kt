@@ -33,6 +33,14 @@ class ProductsFragmentViewModel
                         stateEvent = stateEvent
                     )
                 }
+
+                is ProductsStateEvent.SetProductFavouriteStateEvent -> {
+                    productsRepository.setProductFavourite(
+                        stateEvent = stateEvent,
+                        productId = stateEvent.productId
+                    )
+                }
+
                 else -> {
                     flow {
                         emit(

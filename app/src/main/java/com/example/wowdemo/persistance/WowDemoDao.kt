@@ -15,6 +15,10 @@ interface WowDemoDao {
     suspend fun insertOrUpdateProducts(products: List<Product>)
 
 
+    @Query("SELECT * FROM products WHERE id = :productId")
+    suspend fun readProduct(productId: Int): Product
+
+
 //    @Update(onConflict = OnConflictStrategy.IGNORE)
 //    suspend fun updateProduct(product: Product): Int
 

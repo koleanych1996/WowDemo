@@ -9,4 +9,6 @@ interface ProductsRepository {
 
     fun getProductsList(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>>
 
+    fun setProductFavourite(stateEvent: StateEvent, productId: Int): Flow<DataState<ProductsFragmentViewState>>
+
 }
