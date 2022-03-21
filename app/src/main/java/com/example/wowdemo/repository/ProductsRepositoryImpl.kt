@@ -1,14 +1,11 @@
 package com.example.wowdemo.repository
 
 import android.content.Context
-import androidx.constraintlayout.motion.utils.ViewState
-import com.example.wowdemo.model.GetProductsResponse
 import com.example.wowdemo.model.Product
-import com.example.wowdemo.network.ApiResponseHandler
 import com.example.wowdemo.network.WowDemoApiService
 import com.example.wowdemo.persistance.WowDemoDao
-import com.example.wowdemo.viewModel.common.DataState
 import com.example.wowdemo.viewModel.ProductsFragmentViewState
+import com.example.wowdemo.viewModel.common.DataState
 import com.example.wowdemo.viewModel.common.StateEvent
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -52,6 +49,9 @@ class ProductsRepositoryImpl
             }
 
             override suspend fun updateCache(networkObject: List<Product>) {
+                networkObject.forEach {
+                    it.isFavourite = wowDemoDao.readProduct(it.id).isFavourite
+                }
                 wowDemoDao.insertOrUpdateProducts(products = networkObject)
             }
 
@@ -91,34 +91,6 @@ class ProductsRepositoryImpl
 
     }
 
-//    override fun getProductsList(stateEvent: StateEvent): Flow<DataState<ProductsFragmentViewState>> {
-//        return flow {
-//
-//            val apiResult = safeApiCall(gson = gson, dispatcher = Dispatchers.IO) {
-//                wowDemoApiService.getProducts()
-//            }
-//
-//            emit(
-//                object : ApiResponseHandler<ProductsFragmentViewState, GetProductsResponse>(
-//                    response = apiResult,
-//                    stateEvent = stateEvent
-//                ) {
-//                    override suspend fun handleSuccess(resultObj: GetProductsResponse): DataState<ProductsFragmentViewState> {
-//                        resultObj.let {
-//                            return DataState.data(
-//                                stateEvent = stateEvent,
-//                                response = null,
-//                                data = ProductsFragmentViewState(
-//                                    productsList = resultObj.products,
-//                                )
-//                            )
-//                        }
-//                    }
-//                }.getResult()
-//            )
-//
-//        }
-//
-//    }
-
 }
+
+
