@@ -15,16 +15,6 @@ abstract class ApiResponseHandler<ViewState, Data>(
     suspend fun getResult(): DataState<ViewState> {
 
         return when (response) {
-            is ApiResult.AuthError ->
-                DataState.error(
-                    stateEvent = stateEvent,
-                    response = Response(
-                        messageType = MessageType.Error,
-                        message = GENERIC_AUTH_ERROR,
-                        showError = showError
-
-                    )
-                )
 
             is ApiResult.ForbiddenError -> {
                 val message = (response.errorObject as? ApiErrorException)?.displayErrors()

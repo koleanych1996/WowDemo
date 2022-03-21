@@ -10,11 +10,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.wowdemo.Constants.TAG
 import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
+import com.example.wowdemo.viewModel.ProductsFragmentViewState
 import com.example.wowdemo.viewModel.ProductsStateEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -37,6 +39,9 @@ class ProductsFragment : BaseFragment() {
     private var productsList: MutableList<Product> = mutableListOf()
     private lateinit var adapter: ProductsRecyclerViewAdapter
 
+    private var currentPage = 1
+    private var loading = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,7 +56,7 @@ class ProductsFragment : BaseFragment() {
 
         setupProductsRecyclerView()
 
-        viewModel.setStateEvent(ProductsStateEvent.GetProductsStateEvent)
+        viewModel.setStateEvent(ProductsStateEvent.GetProductsStateEvent(currentPage))
 
         binding.listFormatRadioGroup.setOnCheckedChangeListener { _, _ ->
 
@@ -128,7 +133,9 @@ class ProductsFragment : BaseFragment() {
                 } else {
                     productsList.addAll(it)
                 }
+
                 adapter.notifyDataSetChanged()
+                loading = false
             }
 
         }
@@ -141,13 +148,18 @@ class ProductsFragment : BaseFragment() {
                 )
                 val message = it.response.message
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                viewModel.clearStateMessage()
             }
         }
 
     }
 
     private fun setupProductsRecyclerView() {
-        binding.productsRecycler.layoutManager = LinearLayoutManager(requireContext())
+
+        currentPage = 1
+
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        binding.productsRecycler.layoutManager = linearLayoutManager
         adapter = ProductsRecyclerViewAdapter(requireContext(), productsList)
         binding.productsRecycler.adapter = adapter
 
@@ -156,6 +168,33 @@ class ProductsFragment : BaseFragment() {
             (binding.productsRecycler.layoutManager as LinearLayoutManager).orientation
         )
         binding.productsRecycler.addItemDecoration(dividerItemDecoration)
+
+
+        binding.productsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) { //check for scroll down
+                    val visibleItemCount = linearLayoutManager.childCount
+                    val totalItemCount = linearLayoutManager.itemCount
+                    val pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition()
+
+                    if (loading) {
+                        return
+                    }
+
+                    if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                        loading = true
+                        currentPage += 1
+                        viewModel.setStateEvent(
+                            stateEvent = ProductsStateEvent.GetProductsStateEvent(
+                                page = currentPage
+                            )
+                        )
+                    }
+                }
+            }
+        })
+
     }
 
 

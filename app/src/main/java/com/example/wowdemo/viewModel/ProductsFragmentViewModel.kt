@@ -30,7 +30,8 @@ class ProductsFragmentViewModel
             when (stateEvent) {
                 is ProductsStateEvent.GetProductsStateEvent -> {
                     productsRepository.getProductsList(
-                        stateEvent = stateEvent
+                        stateEvent = stateEvent,
+                        page = stateEvent.page,
                     )
                 }
 
