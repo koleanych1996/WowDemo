@@ -11,11 +11,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wowdemo.Constants.TAG
+import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductsBinding
 import com.example.wowdemo.model.Product
 import com.example.wowdemo.viewModel.ProductsFragmentViewModel
 import com.example.wowdemo.viewModel.ProductsStateEvent
-import com.example.wowdemo.viewModel.common.StateMessageCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -31,7 +31,7 @@ class ProductsFragment : BaseFragment() {
 
     private val viewModel: ProductsFragmentViewModel by viewModels()
 
-    //private var onlyFavourites: Boolean = false
+    private var onlyFavourites: Boolean = false
 
     private var allProductsData: MutableList<Product> = mutableListOf()
     private var productsList: MutableList<Product> = mutableListOf()
@@ -70,20 +70,21 @@ class ProductsFragment : BaseFragment() {
             }
         }
 
-        // TODO: Apply it when database is implemented
-        /**binding.goToFavouritesBtn.setOnClickListener {
-        if (onlyFavourites) {
-        onlyFavourites = false
-        productsList.clear()
-        productsList.addAll(allProductsData)
-        adapter.notifyDataSetChanged()
-        } else {
-        onlyFavourites = true
-        productsList.clear()
-        productsList.addAll(productsList.filter { it.isFavourite })
-        adapter.notifyDataSetChanged()
+        binding.goToFavouritesBtn.setOnClickListener {
+            if (onlyFavourites) {
+                onlyFavourites = false
+                binding.goToFavouritesBtn.setImageResource(R.drawable.ic_heart)
+                productsList.clear()
+                productsList.addAll(allProductsData)
+                adapter.notifyDataSetChanged()
+            } else {
+                onlyFavourites = true
+                binding.goToFavouritesBtn.setImageResource(R.drawable.ic_heart_filed_white)
+                productsList.clear()
+                productsList.addAll(allProductsData.filter { it.isFavourite })
+                adapter.notifyDataSetChanged()
+            }
         }
-        }*/
 
         adapter.setClickListener(
             object : ProductsRecyclerViewAdapter.ItemClickListener {
@@ -94,6 +95,19 @@ class ProductsFragment : BaseFragment() {
                 }
             }
         )
+
+        adapter.setFavouriteClickListener(
+            object : ProductsRecyclerViewAdapter.FavouriteClickListener {
+                override fun onFavouriteClick(view: View?, position: Int) {
+                    val productId = productsList[position].id
+                    viewModel.setStateEvent(
+                        ProductsStateEvent.SetProductFavouriteStateEvent(
+                            productId
+                        )
+                    )
+                }
+            }
+        )
     }
 
     override fun setupChannel() {
@@ -101,30 +115,34 @@ class ProductsFragment : BaseFragment() {
     }
 
     override fun registerObservers() {
-            viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
-                viewState.productsList?.let {
+            viewState.productsList?.let {
 
-                    allProductsData.clear()
-                    allProductsData.addAll(it)
+                allProductsData.clear()
+                allProductsData.addAll(it)
 
-                    productsList.clear()
+                productsList.clear()
+                if (onlyFavourites) {
+                    productsList.addAll(it.filter { it.isFavourite })
+                } else {
                     productsList.addAll(it)
-                    adapter.notifyDataSetChanged()
                 }
-
+                adapter.notifyDataSetChanged()
             }
 
-            viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
-                stateMessage?.let {
-                    Log.d(
-                        TAG,
-                        "StateMessage in ${ProductsFragment::class.java.simpleName} = $stateMessage"
-                    )
-                   val message = it.response.message
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
+        }
+
+        viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
+            stateMessage?.let {
+                Log.d(
+                    TAG,
+                    "StateMessage in ${ProductsFragment::class.java.simpleName} = $stateMessage"
+                )
+                val message = it.response.message
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
+        }
 
     }
 
@@ -139,7 +157,6 @@ class ProductsFragment : BaseFragment() {
         )
         binding.productsRecycler.addItemDecoration(dividerItemDecoration)
     }
-
 
 
 }

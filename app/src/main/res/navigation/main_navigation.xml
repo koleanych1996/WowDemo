@@ -40,12 +40,4 @@
 
     </fragment>
 
-    <fragment
-        android:id="@+id/favouritesFragment"
-        android:name="com.example.wowdemo.view.FavouritesFragment"
-        android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites">
-
-    </fragment>
-
 </navigation>
