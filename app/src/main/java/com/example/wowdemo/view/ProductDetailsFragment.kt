@@ -1,14 +1,17 @@
 package com.example.wowdemo.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.wowdemo.Constants
 import com.example.wowdemo.R
 import com.example.wowdemo.databinding.FragmentProductDetailsBinding
 import com.example.wowdemo.model.Product
@@ -21,7 +24,7 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ProductDetailsFragment : Fragment() {
+class ProductDetailsFragment : BaseFragment() {
 
     private var _binding: FragmentProductDetailsBinding? = null
     private val binding get() = _binding!!
@@ -44,8 +47,6 @@ class ProductDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        subscribeObservers()
-
         viewModel.setStateEvent(ProductDetailsStateEvent.GetProductStateEvent(args.productId))
 
         binding.backBtn.setOnClickListener {
@@ -53,7 +54,11 @@ class ProductDetailsFragment : Fragment() {
         }
     }
 
-    private fun subscribeObservers() {
+    override fun setupChannel() {
+        viewModel.setupChannel()
+    }
+
+    override fun registerObservers() {
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
 
             viewState.product?.let {
@@ -61,6 +66,17 @@ class ProductDetailsFragment : Fragment() {
                 fillViewsWithData()
             }
 
+        }
+
+        viewModel.stateMessage.observe(viewLifecycleOwner) { stateMessage ->
+            stateMessage?.let {
+                Log.d(
+                    Constants.TAG,
+                    "StateMessage in ${ProductsFragment::class.java.simpleName} = $stateMessage"
+                )
+                val message = it.response.message
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

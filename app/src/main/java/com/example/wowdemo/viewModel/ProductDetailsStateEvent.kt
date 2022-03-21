@@ -6,8 +6,8 @@ sealed class ProductDetailsStateEvent : StateEvent {
 
     data class GetProductStateEvent(
         val productId: Int
-    ): ProductDetailsStateEvent() {
-        override fun errorInfo(): String = "Error GetProductStateEvent"
+    ) : ProductDetailsStateEvent() {
+        override fun errorInfo(): String = "Error getting product #${productId}"
         override fun toString(): String = "GetProductStateEvent"
     }
 }

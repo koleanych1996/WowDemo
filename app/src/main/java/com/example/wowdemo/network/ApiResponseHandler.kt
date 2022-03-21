@@ -38,15 +38,12 @@ abstract class ApiResponseHandler<ViewState, Data>(
                 )
             }
 
-
             is ApiResult.GenericError -> {
                 val (message, messageType) = getMessageAndMessageTypeFromResponse(response)
-                val externalValidation = getExternalValidationFromResponse(response)
                 DataState.error(
                     response = Response(
                         message = message,
                         messageType = messageType,
-                        validation = externalValidation,
                         showError = showError
                     ),
                     stateEvent = stateEvent
@@ -104,10 +101,6 @@ abstract class ApiResponseHandler<ViewState, Data>(
 
         response.errorObject?.let {
             when (it) {
-                is AuthException -> {
-                    message = it.displayErrors()
-                    messageType = MessageType.AuthError
-                }
                 is ApiErrorException -> {
                     message = it.displayErrors()
                     messageType = MessageType.Error
@@ -122,17 +115,4 @@ abstract class ApiResponseHandler<ViewState, Data>(
         return Pair(message, messageType)
     }
 
-    private fun getExternalValidationFromResponse(response: ApiResult.GenericError): InternalValidation {
-        var validation: InternalValidation = InternalValidation.None
-        response.errorObject?.let { errorObject ->
-            if (errorObject is ApiErrorException) {
-                validation = InternalValidation.ExternalErrors(
-                    message = errorObject.message,
-                    errors = errorObject.errors
-                )
-            }
-        }
-
-        return validation
-    }
 }

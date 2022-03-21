@@ -139,19 +139,6 @@ fun <ViewState> buildError(
     )
 }
 
-fun <ViewState> buildAuthError(
-    message: String?,
-    stateEvent: StateEvent?
-): DataState<ViewState> {
-    return DataState.error(
-        response = Response(
-            message = "${stateEvent?.errorInfo()}\nReason: $message",
-            messageType = MessageType.AuthError
-        ),
-        stateEvent = stateEvent
-    )
-}
-
 fun <ViewState> buildForbiddenError(
     message: String?,
     stateEvent: StateEvent?
