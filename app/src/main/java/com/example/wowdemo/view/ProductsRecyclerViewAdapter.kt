@@ -49,15 +49,6 @@ class ProductsRecyclerViewAdapter internal constructor(context: Context, data: L
 
             mFavouriteClickListener?.onFavouriteClick(it, position)
 
-            if (!product.isFavourite) {
-                product.isFavourite = true
-//                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_filled)
-//                holder.productFavouriteBtn.setBackgroundResource(R.drawable.orange_circle)
-            } else {
-                product.isFavourite = false
-//                holder.productFavouriteBtn.setImageResource(R.drawable.ic_heart_unfilled)
-//                holder.productFavouriteBtn.setBackgroundResource(R.drawable.white_circle)
-            }
         }
 
         Glide.with(mContext)
